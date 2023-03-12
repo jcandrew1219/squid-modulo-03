@@ -10,20 +10,12 @@ function writePassword() {
 
 }
 
-function generatePassword() {
+function selectCriteria(){
   var criteriaBoolean = [true, true, true, true];
   var confirmString = ["Would you like to include lowercase characters?", "Would you like to include uppercase characters?", "Would you like to include numbers?", "Would you like to include special characters?"];
-  const keys = {
-    lowercase: "abcdefghijklmnopqrstuvwxyz",
-    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    number: "0123456789",
-    symbol: "!@#$%^&*()_+~\`|}{][:;?><,./-=",
-  }
   var checkBool = true;
-
-  //Selecting Criteria for Password
   alert("Please select the criteria for your password");
-  do {
+  do {  //asks set of criteria and recieves true or false input from user
     var counter = 0;
     for(var i = 0; i < confirmString.length; i++) {
       if(confirm(confirmString[i])) {
@@ -33,18 +25,21 @@ function generatePassword() {
         counter++;
       }
     }
-    if(counter == confirmString.length) {
+
+    if(counter == confirmString.length) {  //returns loop to beginning if program recieves all false input from user
       alert("You must select at least one character type.");
       checkBool = true;
-    } else {
+   } else {
       checkBool = false;
-    }
-  } while (checkBool == true);
+   }
+ } while (checkBool == true);
+ return criteriaBoolean;
+}
 
-  //PasswordLength 
-  checkBool = true;
+function getPasswordLength() {
   var passwordLength;
-  do {
+  var checkBool = true;
+  do {  //recieves password length input from user
     passwordLength = prompt("Enter the length of your password below:");
     if(passwordLength > 128 || password < 8) {
       alert("Length must be between 8 and 128 characters.");
@@ -53,33 +48,40 @@ function generatePassword() {
       checkBool = false;
     }
   } while (checkBool == true);
+  return passwordLength;
+}
 
-  
-  //GeneratePassword
+function generatePassword() {
+  var criteriaData = selectCriteria();
+  var pLength = getPasswordLength();
   var password = "";
   var randomKey = "";
-
-  for(var i = 0; i < passwordLength; i++) {
-    if(criteriaBoolean[0] == true) {
+  const keys = {
+    lowercase: "abcdefghijklmnopqrstuvwxyz",
+    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    number: "0123456789",
+    symbol: "!@#$%^&*()_+~\`|}{][:;?><,./-=",
+  }
+  for(var i = 0; i < pLength; i++) { //chooses a random character from a temporary key that only includes character types the user specified
+    if(criteriaData[0] == true) {
       placeKey = keys.lowercase[Math.floor(Math.random() * keys.lowercase.length)];
       randomKey = randomKey.concat(placeKey);
     }
-    if(criteriaBoolean[1] == true) {
+    if(criteriaData[1] == true) {
       placeKey = keys.uppercase[Math.floor(Math.random() * keys.uppercase.length)];
       randomKey = randomKey.concat(placeKey);
     }
-    if(criteriaBoolean[2] == true) {
+    if(criteriaData[2] == true) {
       placeKey = keys.number[Math.floor(Math.random() * keys.number.length)];
       randomKey = randomKey.concat(placeKey);
     }
-    if(criteriaBoolean[3] == true) {
+    if(criteriaData[3] == true) {
       placeKey = keys.symbol[Math.floor(Math.random() * keys.symbol.length)];
       randomKey = randomKey.concat(placeKey);
     }
-    characterToAdd = randomKey[Math.floor(Math.random() * randomKey.length)];
-    password += characterToAdd;
+    password += randomKey[Math.floor(Math.random() * randomKey.length)];
   }
-  return(password);
+  return password;
 }
 
 // Add event listener to generate button
